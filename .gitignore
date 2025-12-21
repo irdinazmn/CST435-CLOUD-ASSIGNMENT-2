@@ -1,2 +1,11 @@
 # Ignore all files in the data directory
 /data/*
+
+# Ignore all files in food_subset directory
+/food_subset/*
+
+# Ignore all files in output directory
+/output_results/*
+
+# Ignore all .pyc files
+*.pyc
