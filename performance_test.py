@@ -1,9 +1,13 @@
 # performance_test.py
+# import os
+import statistics
 from parallel_multiprocessing import parallel_process_multiprocessing
 from parallel_concurrent import parallel_process_concurrent
 
-def run_performance_tests(input_dir, output_base_dir):
-    worker_counts = [1, 2, 4, 8]  # Test with different number of workers
+def run_performance_tests(input_dir, output_base_dir, repeats=3):
+    # max_cpus = os.cpu_count() or 8
+    worker_counts = [1, 2, 4, 8]
+    # worker_counts = [w for w in worker_counts if w <= max_cpus]
     multiprocessing_times = []
     concurrent_times = []
     
@@ -14,28 +18,41 @@ def run_performance_tests(input_dir, output_base_dir):
     for workers in worker_counts:
         print(f"\nTesting with {workers} worker(s)...")
         
-        # Test multiprocessing
-        output_dir = f"{output_base_dir}/multiprocessing_{workers}"
-        print("  Multiprocessing...", end=" ")
-        mp_time = parallel_process_multiprocessing(input_dir, output_dir, workers)
+        # Multiprocessing (multiple repeats, take median)
+        mp_runs = []
+        for i in range(repeats):
+            output_dir = f"{output_base_dir}/multiprocessing_{workers}_run{i}"
+            try:
+                t = parallel_process_multiprocessing(input_dir, output_dir, workers)
+                mp_runs.append(t)
+                print(f"  MP run {i+1}: {t:.3f}s")
+            except Exception as e:
+                print(f"  MP run {i+1} failed: {e}")
+        mp_time = statistics.median(mp_runs) if mp_runs else float('inf')
         multiprocessing_times.append(mp_time)
-        print(f"Time: {mp_time:.2f}s")
+        print(f"  MP median Time: {mp_time:.3f}s")
         
-        # Test concurrent.futures
-        output_dir = f"{output_base_dir}/concurrent_{workers}"
-        print("  Concurrent.futures...", end=" ")
-        cf_time = parallel_process_concurrent(input_dir, output_dir, workers)
+        # Concurrent.futures (multiple repeats, take median)
+        cf_runs = []
+        for i in range(repeats):
+            output_dir = f"{output_base_dir}/concurrent_{workers}_run{i}"
+            try:
+                t = parallel_process_concurrent(input_dir, output_dir, workers)
+                cf_runs.append(t)
+                print(f"  CF run {i+1}: {t:.3f}s")
+            except Exception as e:
+                print(f"  CF run {i+1} failed: {e}")
+        cf_time = statistics.median(cf_runs) if cf_runs else float('inf')
         concurrent_times.append(cf_time)
-        print(f"Time: {cf_time:.2f}s")
+        print(f"  CF median Time: {cf_time:.3f}s")
     
-    # Calculate speedup
-    baseline_mp = multiprocessing_times[0]  # 1 worker time
-    baseline_cf = concurrent_times[0]       # 1 worker time
+    # Safe baselines
+    baseline_mp = multiprocessing_times[0] or 1.0
+    baseline_cf = concurrent_times[0] or 1.0
     
-    mp_speedup = [baseline_mp / t for t in multiprocessing_times]
-    cf_speedup = [baseline_cf / t for t in concurrent_times]
+    mp_speedup = [baseline_mp / t if t and t != float('inf') else 0.0 for t in multiprocessing_times]
+    cf_speedup = [baseline_cf / t if t and t != float('inf') else 0.0 for t in concurrent_times]
     
-    # Calculate efficiency
     mp_efficiency = [s / w for s, w in zip(mp_speedup, worker_counts)]
     cf_efficiency = [s / w for s, w in zip(cf_speedup, worker_counts)]
     
@@ -48,3 +65,4 @@ def run_performance_tests(input_dir, output_base_dir):
         'mp_efficiency': mp_efficiency,
         'cf_efficiency': cf_efficiency
     }
+
