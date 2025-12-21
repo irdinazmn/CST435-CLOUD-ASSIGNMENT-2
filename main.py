@@ -24,7 +24,27 @@ def main():
     print("\n" + "=" * 50)
     print("PERFORMANCE SUMMARY")
     print("=" * 50)
-    
+
+    # Detailed per-worker results
+    for i, w in enumerate(results['worker_counts']):
+        print(f"\nWorkers: {w}")
+
+        mp_runs = results.get('mp_runs', [])
+        if mp_runs and i < len(mp_runs):
+            for r_idx, t in enumerate(mp_runs[i], 1):
+                print(f"  MP run {r_idx}: {t:.2f}s")
+            print(f"  MP median time: {results['mp_times'][i]:.2f}s")
+        else:
+            print(f"  MP time: {results['mp_times'][i]:.2f}s")
+
+        cf_runs = results.get('cf_runs', [])
+        if cf_runs and i < len(cf_runs):
+            for r_idx, t in enumerate(cf_runs[i], 1):
+                print(f"  CF run {r_idx}: {t:.2f}s")
+            print(f"  CF median time: {results['cf_times'][i]:.2f}s")
+        else:
+            print(f"  CF time: {results['cf_times'][i]:.2f}s")
+
     print("\nBest Performance:")
     print(f"- Multiprocessing: {min(results['mp_times']):.2f}s ({results['worker_counts'][results['mp_times'].index(min(results['mp_times']))]} workers)")
     print(f"- Concurrent.futures: {min(results['cf_times']):.2f}s ({results['worker_counts'][results['cf_times'].index(min(results['cf_times']))]} workers)")
