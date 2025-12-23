@@ -5,6 +5,11 @@ import concurrent.futures
 from image_filters import ImageFilters
 
 def parallel_process_concurrent(input_dir, output_dir, max_workers=4):
+    # Process images using concurrent.futures.ProcessPoolExecutor.
+    #   Notes:
+    #       - Uses processes (not threads) because image processing is CPU-bound.
+    #       - When using ProcessPoolExecutor.map we pass the output_dir as a repeated arg to reduce
+    #         per-task closure overhead.
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     

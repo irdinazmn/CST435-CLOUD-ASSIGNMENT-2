@@ -1,4 +1,3 @@
-# main.py
 from performance_test import run_performance_tests
 from visualization import plot_results, save_results_to_csv
 

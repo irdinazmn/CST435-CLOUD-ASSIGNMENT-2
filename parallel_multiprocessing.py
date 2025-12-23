@@ -1,4 +1,3 @@
-# parallel_multiprocessing.py
 import os
 import time
 from multiprocessing import Pool
@@ -9,6 +8,16 @@ def process_single_image(args):
     return ImageFilters.process_image(image_path, output_dir)
 
 def parallel_process_multiprocessing(input_dir, output_dir, num_processes=4):
+    # Process images using multiprocessing.Pool.
+    #
+    #   Rationale:
+    #       - OpenCV filters are CPU-bound native code. Using processes avoids the GIL and lets
+    #         the OS schedule real parallel compute across CPU cores.
+    #       - The default number of processes is the CPU core count.
+    #       - chunksize can reduce scheduling overhead for many small tasks.
+    #
+    #       Returns:
+    #           elapsed_seconds (float): Time taken to process all images.
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     
