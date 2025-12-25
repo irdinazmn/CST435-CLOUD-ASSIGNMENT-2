@@ -51,11 +51,19 @@ def main(input_dir='food_subset', output_base_dir='output_results', repeats=3):
     print("\nMaximum Speedup:")
     print(f"- Multiprocessing: {max(results['mp_speedup']):.2f}x")
     print(f"- Concurrent.futures: {max(results['cf_speedup']):.2f}x")
+
+    # Print analysis summary if present
+    analysis = results.get('analysis_summary')
+    if analysis:
+        print("\nAnalysis Summary:")
+        print(analysis)
     
     print("\nFiles Generated:")
     print("1. performance_results.png - Performance graphs")
-    print("2. performance_metrics.csv - Raw performance data")
-    print("3. output_results/ - Processed images by worker count")
+    print("2. performance_throughput.png - Throughput vs workers")
+    print("3. performance_metrics.csv - Raw performance data")
+    print("4. analysis_summary.txt - Automated analysis summary")
+    print("5. output_results/ - Processed images by worker count")
 
 if __name__ == "__main__":
     import argparse

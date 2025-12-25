@@ -41,5 +41,6 @@ def parallel_process_multiprocessing(input_dir, output_dir, num_processes=4):
     
     end_time = time.time()
     
-    print(f"Processed {len([r for r in results if r])} images")
-    return end_time - start_time
+    processed = len([r for r in results if r])
+    print(f"Processed {processed} images")
+    return end_time - start_time, processed
