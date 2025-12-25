@@ -18,7 +18,7 @@ A parallel image processing system that applies various filters to food images f
 - **Language:** Python 3.8+
 - **Parallel Paradigms:** 
   - `multiprocessing` module
-  - `concurrent.futures` (ProcessPoolExecutor)
+  - `concurrent.futures` (ThreadPoolExecutor)
 - **Libraries:** OpenCV, NumPy, Matplotlib, Pandas
 - **Cloud Platform:** Google Cloud Platform (GCP)
 - **Dataset:** Food-101 (subset)
@@ -43,9 +43,9 @@ with Pool(processes=4) as pool:
 ```
 ### 2. Concurrent.futures
 ```python
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 
-with ProcessPoolExecutor(max_workers=4) as executor:
+with ThreadPoolExecutor(max_workers=4) as executor:
     executor.map(process_image, image_list)
 ```
 ## Running the Project

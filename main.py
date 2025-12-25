@@ -1,17 +1,17 @@
 from performance_test import run_performance_tests
 from visualization import plot_results, save_results_to_csv
 
-def main():
+def main(input_dir='food_subset', output_base_dir='output_results', repeats=3):
     # Configuration
-    INPUT_DIR = "food_subset"
-    OUTPUT_BASE_DIR = "output_results"
+    INPUT_DIR = input_dir
+    OUTPUT_BASE_DIR = output_base_dir
     
     print("=" * 50)
     print("PARALLEL IMAGE PROCESSING PERFORMANCE ANALYSIS")
     print("=" * 50)
     
     # Run performance tests
-    results = run_performance_tests(INPUT_DIR, OUTPUT_BASE_DIR)
+    results = run_performance_tests(INPUT_DIR, OUTPUT_BASE_DIR, repeats=repeats)
     
     # Generate visualizations
     plot_results(results)
@@ -58,4 +58,12 @@ def main():
     print("3. output_results/ - Processed images by worker count")
 
 if __name__ == "__main__":
-    main()
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Run parallel processing performance tests")
+    parser.add_argument("--input-dir", default="food_subset", help="Input directory of images")
+    parser.add_argument("--output-dir", default="output_results", help="Base output directory")
+    parser.add_argument("--repeats", type=int, default=3, help="Number of repeats per worker count (default: 3)")
+    args = parser.parse_args()
+
+    main(input_dir=args.input_dir, output_base_dir=args.output_dir, repeats=args.repeats)
