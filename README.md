@@ -1,10 +1,10 @@
 # Parallel Image Processing System - CST435 Assignment 2
 # Group 10
 ## Prepared by:
-NUR IRDINA SYHUHADA BINTI AZMAN - 160394
-NUR IZZATI BINTI AYUB - 160347
-ASILAH ZARIFAH BINTI ROSLI - 160458
-NORITA BINTI MUIN - 160453
+1. NUR IRDINA SYHUHADA BINTI AZMAN - 160394
+2. NUR IZZATI BINTI AYUB - 160347
+3. ASILAH ZARIFAH BINTI ROSLI - 160458
+4. NORITA BINTI MUIN - 160453
 
 ## Project Overview
 A parallel image processing system that applies various filters to food images from the Food-101 dataset using different Python parallel programming paradigms. This project demonstrates performance analysis, scalability, and cloud deployment on Google Cloud Platform (GCP).
